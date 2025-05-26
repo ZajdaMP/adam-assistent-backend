@@ -8,7 +8,6 @@ from urllib.parse import urlencode
 
 app = FastAPI()
 
-# Povolení CORS (pro GPT Builder, pokud potřebuje)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -17,7 +16,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Tyto hodnoty získáš v Google Cloud konzoli
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("REDIRECT_URI", "http://localhost:8000/oauth2callback")
@@ -28,6 +26,10 @@ SCOPES = [
     "https://www.googleapis.com/auth/calendar",
     "https://www.googleapis.com/auth/contacts.readonly"
 ]
+
+@app.get("/")
+def root():
+    return {"message": "Adam Assistant Backend is running"}
 
 @app.get("/auth")
 def authorize():
@@ -74,7 +76,3 @@ def get_emails():
         raise HTTPException(status_code=r.status_code, detail="Failed to get emails")
 
     return r.json()
-
-@app.get("/")
-def root():
-    return {"message": "Adam Assistant Backend is running"}
