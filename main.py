@@ -78,6 +78,6 @@ def get_emails():
     return r.json()
 
 # Vynucené přepsání main.py - oprava /auth endpointu
-Oprava: odstranění neplatného znaku - místo pomlčky
+# Oprava: odstranění neplatného znaku - místo pomlčky
 
 
