@@ -76,3 +76,6 @@ def get_emails():
         raise HTTPException(status_code=r.status_code, detail="Failed to get emails")
 
     return r.json()
+
+Vynucené přepsání main.py – oprava /auth endpointu
+
