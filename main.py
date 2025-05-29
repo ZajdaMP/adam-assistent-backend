@@ -18,7 +18,7 @@ app.add_middleware(
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-REDIRECT_URI = os.getenv("REDIRECT_URI", "http://localhost:8000/oauth2callback")
+REDIRECT_URI = os.getenv("REDIRECT_URI", "https://adam-assistant-backend.onrender.com/oauth2callback")
 TOKEN_FILE = "google_tokens.json"
 
 SCOPES = [
