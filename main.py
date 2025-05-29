@@ -87,3 +87,7 @@ def get_emails():
         raise HTTPException(status_code=r.status_code, detail="Failed to get emails")
 
     return r.json()
+
+@app.get("/test")
+def test():
+    return {"status": "API běží"}
