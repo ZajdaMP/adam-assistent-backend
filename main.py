@@ -8,6 +8,7 @@ from urllib.parse import urlencode
 
 app = FastAPI()
 
+# Povolení CORS – umožní přístup i z jiných domén (např. pokud později budeš volat z frontendu)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -16,21 +17,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Klíče z prostředí (Render → Prostředí → Environment)
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-REDIRECT_URI = os.getenv("REDIRECT_URI", "https://adam-assistant-backend.onrender.com/oauth2callback")
+REDIRECT_URI = os.getenv(
+    "REDIRECT_URI", "https://adam-assistant-backend.onrender.com/oauth2callback"
+)
+
+# Kam se uloží přístupové tokeny
 TOKEN_FILE = "google_tokens.json"
 
+# Požadované oprávnění k API
 SCOPES = [
     "https://www.googleapis.com/auth/gmail.readonly",
     "https://www.googleapis.com/auth/calendar",
     "https://www.googleapis.com/auth/contacts.readonly"
 ]
 
+# Testovací kořenový endpoint – lze ověřit, že server běží
 @app.get("/")
 def root():
     return {"message": "Adam Assistant Backend is running"}
 
+# Spustí Google OAuth 2.0 přihlašování
 @app.get("/auth")
 def authorize():
     params = {
@@ -43,6 +52,7 @@ def authorize():
     }
     return RedirectResponse(f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}")
 
+# Google tě po přihlášení vrátí sem – tady vyměníme kód za token
 @app.get("/oauth2callback")
 def oauth2callback(code: str):
     data = {
@@ -62,6 +72,7 @@ def oauth2callback(code: str):
 
     return {"message": "Authorization successful"}
 
+# Testovací endpoint: načte posledních 5 e-mailů (nutný platný token)
 @app.get("/emails")
 def get_emails():
     if not os.path.exists(TOKEN_FILE):
@@ -76,9 +87,3 @@ def get_emails():
         raise HTTPException(status_code=r.status_code, detail="Failed to get emails")
 
     return r.json()
-
-# Vynucené přepsání main.py - oprava /auth endpointu
-# Oprava: odstranění neplatného znaku - místo pomlčky
-# Oprava: doplnění hashtagu k předchzímu řádku.
-
-
